@@ -77,6 +77,23 @@ High-resolution **rising-edge** capture at 2 ns/div.
 
 This rising-edge capture confirms that the RK3588 UART TX driver is well-controlled and does not exhibit significant overshoot or ringing, even when examined at the highest time resolution supported by the scope.
 
+
+---
+
+### `uart-tx-rise-0v-2ns-rock5bp.png`
+High-resolution 2 ns/div capture of a **true 0 V → 3.3 V rising edge** on UART TX. The trigger threshold was lowered to ~800 mV to ensure the transition begins from a logic-low condition.
+
+**Rising-Edge Characteristics (0 → 3.3 V)**
+- Timebase: **2 ns/div**
+- Rise time: **≈ 5.46 ns**
+- Vmin: **≈ 0.18 V**
+- Vmax: **≈ 3.22 V**
+- Overshoot: **≈ 9.9%**
+- Preshoot: **≈ 1.1%**
+- Ringing: **minimal, well-damped**
+
+This capture demonstrates the maximum edge rate and worst-case overshoot behavior of the RK3588 UART TX driver at the Rock5B+ board-level test point.
+
 ---
 
 ## Summary Notes
