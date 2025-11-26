@@ -18,36 +18,70 @@ driver at the board-level test point.
 
 These captures show the raw output of the SoC, not the USB-serial adapter.
 
-## Images
+## Images and Details
+
+All measurements below are taken at **1.5 Mbps** UART TX on the Rock5B+, probed at the breakout pad directly connected to the RK3588 UART-TX pin.
 
 ### `uart-tx-edge-20ns-rock5bp.png`
-Fine-scale view of the falling edge. Shows edge shape, preshoot, and damping.
+Fine-scale view of a single **falling edge** at 20 ns/div.
 
-### `uart-tx-edge-50ns-rock5bp.png`
-Medium zoom. Useful for observing ringing and general edge quality.
+- Timebase: **20 ns/div**
+- Fall time: **≈ 11.2 ns**
+- Vmax: **≈ 3.52 V**
+- Vmin: **≈ 0.19 V**
+- Preshoot: **≈ 1.1%**
+- Ringing: very small, damped within ~20–30 ns
 
-### `uart-tx-edge-1us-rock5bp.png`
-Wider view showing multiple UART bits for context.
-
-## Notes
-
-- Typical fall time observed: ~11–12 ns  
-- Overshoot and preshoot are low and within expected limits  
-- Measurements represent the actual RK3588 pad output, not cable or dongle distortion  
+This capture is useful for inspecting the detailed edge shape, preshoot, and how quickly the driver settles to a stable low level.
 
 ---
 
-## Rising-Edge Measurement
+### `uart-tx-edge-50ns-rock5bp.png`
+Medium-zoom view of the **falling edge** at 50 ns/div.
+
+- Timebase: **50 ns/div**
+- Fall time: **≈ 12.0 ns**
+- Vmax: **≈ 3.52 V**
+- Vmin: **≈ 0.18 V**
+- Preshoot: **≈ 1.1%**
+- Ringing: clearly visible but well-controlled and fully damped before the next bit period
+
+This screenshot makes it easier to see overall edge quality, including how much energy is in the post-transition ringing and how quickly it dies out relative to the 1.5 Mbps bit period.
+
+---
+
+### `uart-tx-edge-1us-rock5bp.png`
+Wider view at 1 µs/div showing multiple UART bits.
+
+- Timebase: **1.0 µs/div**
+- Rise time: **≈ 11.5 ns**
+- Fall time: **≈ 11.5 ns**
+- Vmax: **≈ 3.54 V**
+- Vmin: **≈ 0.16 V**
+- Preshoot: **≈ 1.2%**
+
+At this scale, the line looks like clean, well-formed digital levels with sharp transitions and ample timing margin for 1.5 Mbps operation. This view is useful for visually confirming bit width, duty cycle, and general signal cleanliness over several bit intervals.
+
+---
 
 ### `uart-tx-rise-2ns-rock5bp.png`
-High-resolution 2 ns/div capture of the TX rising edge. This measurement uses the same probe configuration as the falling-edge captures and reflects the true behavior of the RK3588 UART driver at the board-level pad.
+High-resolution **rising-edge** capture at 2 ns/div.
 
-**Rising-Edge Characteristics**
-- Typical rise time: **~10.2 ns**
-- Voltage transition observed: **~2.68 V → 3.46 V**
+- Timebase: **2 ns/div**
+- Rise time: **≈ 10.2 ns**
+- Voltage transition observed: **≈ 2.68 V → 3.46 V** (mid-bit rising transition)
 - Overshoot: **0.0%**
 - Preshoot: **0.0%**
-- Ringing: **minimal / well-damped within ~20–30 ns**
-- Edge shape is smooth and monotonic with no discontinuities
+- Ringing: minimal, well-damped within ~20–30 ns
+- Edge shape: smooth and monotonic with no discontinuities
 
-The rising-edge capture confirms that the RK3588 UART TX output is well-controlled and exhibits minimal distortion. No DTS-level drive-strength adjustments appear necessary for the Rock5B+ under typical board-level routing conditions.
+This rising-edge capture confirms that the RK3588 UART TX driver is well-controlled and does not exhibit significant overshoot or ringing, even when examined at the highest time resolution supported by the scope.
+
+---
+
+## Summary Notes
+
+- Typical **rise and fall times** are in the **~10–12 ns** range at 3.3 V.
+- Overshoot and preshoot are low and within expected limits for a short board-level trace.
+- The measurements represent the **actual RK3588 pad output**, not cable or USB-serial dongle distortion.
+- No DTS-level drive-strength tuning appears necessary for this board and routing at 1.5 Mbps.
